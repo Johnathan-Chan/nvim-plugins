@@ -76,5 +76,7 @@ return {
     local lspconfig = require("lspconfig")
     -- golang lspconfig
     lspconfig["golsp"].setup({})
-  end
+    -- rust lspconfig
+    lspconfig["rust-analyzer"].setup({})
+  end,
 }

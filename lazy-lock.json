@@ -11,6 +11,7 @@
   "catppuccin": { "branch": "main", "commit": "4965db2d6155c25db4e8417465fc2703fdf4c2b7" },
   "cmp-tabnine": { "branch": "main", "commit": "c0167cdc86c15e782c5461ee62aebee89231c2ed" },
   "conform.nvim": { "branch": "master", "commit": "363243c03102a531a8203311d4f2ae704c620d9b" },
+  "crates.nvim": { "branch": "main", "commit": "1c924d5a9ea3496c4e1a02d0d51388ba809f8468" },
   "flash.nvim": { "branch": "main", "commit": "f899265876ecdcf7352dbc9f0adf87068cedefbb" },
   "friendly-snippets": { "branch": "main", "commit": "efff286dd74c22f731cdec26a70b46e5b203c619" },
   "fzf-lua": { "branch": "main", "commit": "e3fefd97875827e47dc4bbf1074ee464b2d8e6a8" },
