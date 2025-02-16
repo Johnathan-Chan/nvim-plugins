@@ -24,3 +24,5 @@ map("n", "<A-.>", "<Cmd>BufferNext<CR>", opts)
 --    args = { "-test.v", "-test.run", "^" .. test_name .. "$" },
 --  })
 --end, { desc = "Debug Test under cursor" })
+
+vim.keymap.set({ "n", "v" }, "<leader>p", "", { desc = "custom plugin" })

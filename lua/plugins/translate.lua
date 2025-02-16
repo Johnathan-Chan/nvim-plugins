@@ -10,10 +10,10 @@ return {
           float = true,
         },
       })
-
-      -- 自定义快捷键
-      vim.keymap.set("n", "<leader>pt", ":Translate ZH<CR>", { desc = "Translate English to Chinese" })
-      vim.keymap.set("v", "<leader>pt", ":Translate ZH<CR>", { desc = "Translate selected text to Chinese" })
     end,
+
+    keys = {
+      { "<leader>pt", mode = { "n", "v" }, ":Translate ZH<CR>", desc = "Translate text to ZH" },
+    },
   },
 }
