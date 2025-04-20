@@ -1,14 +1,15 @@
 return {
   {
     "Kurama622/llm.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim", "Exafunction/codeium.nvim" },
     cmd = { "LLMSessionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
+    lazy = false,
     config = function()
-      local tools = require("llm.common.tools")
+      local tools = require("llm.tools")
       require("llm").setup({
-        -- [[ kimi ]]
-        url = "https://api.moonshot.cn/v1/chat/completions",
-        model = "moonshot-v1-8k", -- "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"
+        -- [[ deepseek ]]
+        url = "https://openrouter.ai/api/v1/chat/completions",
+        model = "deepseek/deepseek-chat-v3-0324", -- "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"
         api_type = "openai",
         max_tokens = 4096,
         temperature = 0.3,
@@ -104,6 +105,99 @@ return {
               },
             },
           },
+          AttachToChat = {
+            handler = tools.attach_to_chat_handler,
+            opts = {
+              is_codeblock = true,
+              inline_assistant = true,
+              language = "Chinese",
+              -- display diff
+              display = {
+                mapping = {
+                  mode = "n",
+                  keys = { "d" },
+                },
+                action = nil,
+              },
+              -- accept diff
+              accept = {
+                mapping = {
+                  mode = "n",
+                  keys = { "Y", "y" },
+                },
+                action = nil,
+              },
+              -- reject diff
+              reject = {
+                mapping = {
+                  mode = "n",
+                  keys = { "N", "n" },
+                },
+                action = nil,
+              },
+              -- close diff
+              close = {
+                mapping = {
+                  mode = "n",
+                  keys = { "<esc>" },
+                },
+                action = nil,
+              },
+            },
+          },
+          Ask = {
+            handler = tools.disposable_ask_handler,
+            opts = {
+              position = {
+                row = 2,
+                col = 0,
+              },
+              title = " Ask ",
+              inline_assistant = true,
+              language = "Chinese",
+
+              -- [optinal] set your llm model
+              url = "https://openrouter.ai/api/v1/chat/completions",
+              model = "deepseek/deepseek-chat-v3-0324",
+              api_type = "openai",
+              fetch_key = function()
+                return vim.env.LLM_KEY
+              end,
+
+              -- display diff
+              display = {
+                mapping = {
+                  mode = "n",
+                  keys = { "d" },
+                },
+                action = nil,
+              },
+              -- accept diff
+              accept = {
+                mapping = {
+                  mode = "n",
+                  keys = { "Y", "y" },
+                },
+                action = nil,
+              },
+              -- reject diff
+              reject = {
+                mapping = {
+                  mode = "n",
+                  keys = { "N", "n" },
+                },
+                action = nil,
+              },
+              -- close diff
+              close = {
+                mapping = {
+                  mode = "n",
+                  keys = { "<esc>" },
+                },
+                action = nil,
+              },
+            },
+          },
         },
       })
     end,
@@ -129,6 +223,18 @@ return {
         mode = "v",
         "<cmd>LLMAppHandler CodeExplain<cr>",
         desc = "explain code",
+      },
+      {
+        "<leader>paca",
+        mode = "v",
+        "<cmd>LLMAppHandler Ask<cr>",
+        desc = "ask code",
+      },
+      {
+        "<leader>pacA",
+        mode = "v",
+        "<cmd>LLMAppHandler AttachToChat<cr>",
+        desc = "AttachToChat",
       },
       { "<leader>pat", mode = { "n", "v" }, desc = "translate" },
       {
