@@ -3,6 +3,6 @@ return {
   version = "*",
   config = true,
   keys = {
-    { "<C-t>", mode = { "n", "v" }, ":ToggleTerm<CR>", desc = "termieterm" },
+    { "<C-t>", mode = { "n", "v", "i" }, ":ToggleTerm<CR>", desc = "termieterm" },
   },
 }
