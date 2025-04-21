@@ -11,6 +11,8 @@ local map = LazyVim.safe_keymap_set
 --barbar.lua Move to previous/next
 map("n", "<A-,>", "<Cmd>BufferPrevious<CR>", opts)
 map("n", "<A-.>", "<Cmd>BufferNext<CR>", opts)
+map("n", "<A-c>", "<Cmd>BufferClose<CR>", opts)
+
 --map("n", "<leader>dT", function()
 --  -- 获取当前光标下的 Test 方法名
 --  local test_name = vim.fn.expand("<cword>")
