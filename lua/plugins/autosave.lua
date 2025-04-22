@@ -2,29 +2,25 @@ return {
   "Pocco81/auto-save.nvim",
   event = "BufReadPost",
   config = function()
-    local last_undo_time = 0
-
-    -- 旧版本替代方案：通过 TextChanged 事件间接检测
-    vim.api.nvim_create_autocmd("TextChanged", {
-      pattern = "*",
-      callback = function()
-        -- 当连续操作间隔 < 0.3 秒时，认为是 Undo/Redo
-        local now = vim.loop.hrtime()
-        if (now - last_undo_time) / 1e9 < 0.3 then
-          last_undo_time = now
-          return
-        end
-        last_undo_time = now
-      end,
-    })
-
     require("auto-save").setup({
       enabled = true,
-      events = { "InsertLeave", "TextChanged", "CursorHold" },
+      execution_message = {
+        message = function()
+          return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
+        end,
+        dim = 0.18,
+        cleaning_interval = 1250,
+      },
+      trigger_events = { "InsertLeave", "TextChanged" },
       condition = function(buf)
-        local now = vim.loop.hrtime()
-        return (now - last_undo_time) / 1e9 >= 0.3
+        local fn = vim.fn
+        local utils = require("auto-save.utils.data")
+        if fn.getbufvar(buf, "&modifiable") == 1 and utils.not_in(fn.getbufvar(buf, "&filetype"), {}) then
+          return true
+        end
+        return false
       end,
+      debounce_delay = 30000,
     })
   end,
 }
