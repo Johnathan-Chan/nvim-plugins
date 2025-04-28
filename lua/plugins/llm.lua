@@ -1,14 +1,15 @@
 return {
   {
     "Kurama622/llm.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim", "Exafunction/codeium.nvim" },
     cmd = { "LLMSessionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
+    lazy = false,
     config = function()
-      local tools = require("llm.common.tools")
+      local tools = require("llm.tools")
       require("llm").setup({
-        -- [[ kimi ]]
-        url = "https://api.moonshot.cn/v1/chat/completions",
-        model = "moonshot-v1-8k", -- "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"
+        -- [[ deepseek ]]
+        url = "https://openrouter.ai/api/v1/chat/completions",
+        model = "deepseek/deepseek-chat-v3-0324", -- "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"
         api_type = "openai",
         max_tokens = 4096,
         temperature = 0.3,
@@ -58,6 +59,95 @@ return {
         app_handler = {
           -- Your AI tools Configuration
           -- TOOL_NAME = { ... }
+          Completion = {
+            handler = tools.completion_handler,
+            opts = {
+              -------------------------------------------------
+              ---                   ollama
+              -------------------------------------------------
+              -- url = "http://localhost:11434/v1/completions",
+              -- model = "qwen2.5-coder:1.5b",
+              -- api_type = "ollama",
+              -- ------------------- end ollama ------------------
+
+              -------------------------------------------------
+              ---                  deepseek
+              -------------------------------------------------
+              url = "https://openrouter.ai/api/v1/beta/completions",
+              model = "deepseek/deepseek-chat-v3-0324",
+              api_type = "openai",
+              fetch_key = function()
+                return vim.env.LLM_KEY
+              end,
+              ---------------- end deepseek -----------------
+
+              -------------------------------------------------
+              ---                 siliconflow
+              -------------------------------------------------
+              -- url = "https://api.siliconflow.cn/v1/completions",
+              -- model = "Qwen/Qwen2.5-Coder-7B-Instruct",
+              -- api_type = "openai",
+              -- fetch_key = function()
+              --   return "your api key"
+              -- end,
+              ------------------ end siliconflow -----------------
+
+              -------------------------------------------------
+              ---                  codeium
+              ---    dependency: "Exafunction/codeium.nvim"
+              -------------------------------------------------
+              -- api_type = "codeium",
+              ------------------ end codeium ------------------
+
+              n_completions = 3,
+              context_window = 512,
+              max_tokens = 256,
+
+              -- A mapping of filetype to true or false, to enable completion.
+              filetypes = { sh = false },
+
+              -- Whether to enable completion of not for filetypes not specifically listed above.
+              default_filetype_enabled = true,
+
+              auto_trigger = true,
+
+              -- just trigger by { "@", ".", "(", "[", ":", " " } for `style = "nvim-cmp"`
+              only_trigger_by_keywords = true,
+
+              style = "blink.cmp", -- nvim-cmp or blink.cmp
+
+              timeout = 10, -- max request time
+
+              -- only send the request every x milliseconds, use 0 to disable throttle.
+              throttle = 1000,
+              -- debounce the request in x milliseconds, set to 0 to disable debounce
+              debounce = 400,
+
+              --------------------------------
+              ---   just for virtual_text
+              --------------------------------
+              keymap = {
+                virtual_text = {
+                  accept = {
+                    mode = "i",
+                    keys = "<A-a>",
+                  },
+                  next = {
+                    mode = "i",
+                    keys = "<A-n>",
+                  },
+                  prev = {
+                    mode = "i",
+                    keys = "<A-p>",
+                  },
+                  toggle = {
+                    mode = "n",
+                    keys = "<leader>cp",
+                  },
+                },
+              },
+            },
+          },
           WordTranslate = {
             handler = tools.flexi_handler,
             prompt = "Translate the following text to Chinese, please only return the translation",
@@ -104,6 +194,99 @@ return {
               },
             },
           },
+          AttachToChat = {
+            handler = tools.attach_to_chat_handler,
+            opts = {
+              is_codeblock = true,
+              inline_assistant = true,
+              language = "Chinese",
+              -- display diff
+              display = {
+                mapping = {
+                  mode = "n",
+                  keys = { "d" },
+                },
+                action = nil,
+              },
+              -- accept diff
+              accept = {
+                mapping = {
+                  mode = "n",
+                  keys = { "Y", "y" },
+                },
+                action = nil,
+              },
+              -- reject diff
+              reject = {
+                mapping = {
+                  mode = "n",
+                  keys = { "N", "n" },
+                },
+                action = nil,
+              },
+              -- close diff
+              close = {
+                mapping = {
+                  mode = "n",
+                  keys = { "<esc>" },
+                },
+                action = nil,
+              },
+            },
+          },
+          Ask = {
+            handler = tools.disposable_ask_handler,
+            opts = {
+              position = {
+                row = 2,
+                col = 0,
+              },
+              title = " Ask ",
+              inline_assistant = true,
+              language = "Chinese",
+
+              -- [optinal] set your llm model
+              url = "https://openrouter.ai/api/v1/chat/completions",
+              model = "deepseek/deepseek-chat-v3-0324",
+              api_type = "openai",
+              fetch_key = function()
+                return vim.env.LLM_KEY
+              end,
+
+              -- display diff
+              display = {
+                mapping = {
+                  mode = "n",
+                  keys = { "d" },
+                },
+                action = nil,
+              },
+              -- accept diff
+              accept = {
+                mapping = {
+                  mode = "n",
+                  keys = { "Y", "y" },
+                },
+                action = nil,
+              },
+              -- reject diff
+              reject = {
+                mapping = {
+                  mode = "n",
+                  keys = { "N", "n" },
+                },
+                action = nil,
+              },
+              -- close diff
+              close = {
+                mapping = {
+                  mode = "n",
+                  keys = { "<esc>" },
+                },
+                action = nil,
+              },
+            },
+          },
         },
       })
     end,
@@ -129,6 +312,18 @@ return {
         mode = "v",
         "<cmd>LLMAppHandler CodeExplain<cr>",
         desc = "explain code",
+      },
+      {
+        "<leader>paca",
+        mode = "v",
+        "<cmd>LLMAppHandler Ask<cr>",
+        desc = "ask code",
+      },
+      {
+        "<leader>pacA",
+        mode = "v",
+        "<cmd>LLMAppHandler AttachToChat<cr>",
+        desc = "AttachToChat",
       },
       { "<leader>pat", mode = { "n", "v" }, desc = "translate" },
       {
